@@ -12,7 +12,7 @@ end
 -- 开拍失败：写进日志、在玩家头上显示，并写入信号文件让录制脚本停止等待并报告原因
 local function Fail(msg)
     print(LOG_TAG, "ERROR", msg)
-    G.TheSim:SetPersistentString("story_director_signal", "ERROR "..msg.." "..tostring(os.time()), false)
+    G.TheSim:SetPersistentString("story_director_signal", "ERROR "..msg.." "..tostring(G.os.time()), false)
     if G.ThePlayer ~= nil and G.ThePlayer.components.talker ~= nil then
         G.ThePlayer.components.talker:Say(msg, 8)
     end
