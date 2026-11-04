@@ -1,0 +1,28 @@
+# AI 工作产物：录制的视频、音频、截图、日志
+_ai_work/
+
+# 录制输出
+*.mp4
+*.wav
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 备份与临时文件
+*.bak
+*.tmp
+*~
+
+# 工坊上传绑定标记（本机状态）
+.workshop-target.json
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
