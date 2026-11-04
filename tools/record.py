@@ -266,8 +266,13 @@ def record(save_dir, out, ffmpeg, fps=30, wait=900, max_length=600, capture="aut
     ]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
 
-    stop = wait_for(signal, ("STOP",), start, time.time() + max_length)
-    print("拍摄结束" if stop else "超过最长时长，强制停止", flush=True)
+    stop = wait_for(signal, ("STOP", "ERROR"), start, time.time() + max_length)
+    if stop is None:
+        print("超过最长时长，强制停止", flush=True)
+    elif stop.startswith("ERROR"):
+        print("游戏里拍摄出错，停止录制：" + re.sub(r"^ERROR\s+|\s+\d+$", "", stop), flush=True)
+    else:
+        print("拍摄结束", flush=True)
     # 画面和声音在同一刻停止，之后用各自时长反推起点
     video_end = time.perf_counter()
     proc.stdin.write(b"q")
@@ -300,6 +305,8 @@ def record(save_dir, out, ffmpeg, fps=30, wait=900, max_length=600, capture="aut
         ], check=True)
         os.remove(video_path)
         os.remove(audio_path)
+    if stop is not None and stop.startswith("ERROR"):
+        return 3, "已保存出错前的部分：" + out
     return (0 if stop else 1), "已保存：" + out
 
 

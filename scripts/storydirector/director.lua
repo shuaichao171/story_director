@@ -643,10 +643,25 @@ end
 --------------------------------------------------------------------------
 -- 生命周期
 
+-- 剧本里的函数出错时不让游戏崩溃：停止拍摄、显示错误，并通知录制脚本
+function Director:Abort(err)
+    local msg = "剧本出错："..tostring(err)
+    print(LOG_TAG, "ERROR", msg)
+    TheSim:SetPersistentString(SIGNAL_FILE, "ERROR "..msg.." "..tostring(os.time()), false)
+    self:Stop()
+    TheFrontEnd:Fade(FADE_IN, 0.5)
+    if ThePlayer ~= nil and ThePlayer.components.talker ~= nil then
+        ThePlayer.components.talker:Say(msg, 10)
+    end
+end
+
 function Director:After(t, fn)
     local task = self.root:DoTaskInTime(t, function()
         if self.running then
-            fn(self)
+            local ok, err = pcall(fn, self)
+            if not ok and self.running then
+                self:Abort(err)
+            end
         end
     end)
     table.insert(self.tasks, task)
