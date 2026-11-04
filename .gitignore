@@ -1,7 +1,8 @@
 # AI 工作产物：录制的视频、音频、截图、日志
 _ai_work/
 
-# 录制输出
+# 录制输出（tools/shoot.py 默认存到 takes/）
+takes/
 *.mp4
 *.wav
 *.log

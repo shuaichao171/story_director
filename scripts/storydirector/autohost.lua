@@ -17,7 +17,7 @@ local function ReadFlag(cb)
             cb(nil)
             return
         end
-        local state, scene = str:match("^%s*(%u+)%s*(%w*)")
+        local state, scene = str:match("^%s*(%u+)%s*([%w_]*)")
         cb(state, scene ~= "" and scene or "sample")
     end)
 end
